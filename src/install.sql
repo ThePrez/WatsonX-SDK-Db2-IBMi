@@ -23,7 +23,8 @@ create or replace procedure watsonx.SetBearerTokenForJob(bearer_token varchar(10
 modifies sql data
 begin
   set watsonx.JobBearerToken = bearer_token;
-  set watsonx.JobTokenExpires = current timestamp + expires seconds + 60 seconds;
+  -- We subtract 60 seconds from the expiration time to ensure we don't cut it too close
+  set watsonx.JobTokenExpires = current timestamp + expires seconds - 60 seconds;
 end;
 
 create or replace function watsonx.ShouldGetNewToken() 
