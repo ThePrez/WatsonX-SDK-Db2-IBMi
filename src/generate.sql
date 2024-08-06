@@ -1,4 +1,7 @@
-create or replace function watsonx.generate(text varchar(1000) CCSID 1208)
+create or replace function watsonx.generate(
+  text varchar(1000) ccsid 1208,
+  model_id varchar(128) ccsid 1208 default 'meta-llama/llama-2-13b-chat'
+)
   returns varchar(10000) ccsid 1208
   not deterministic
 begin
@@ -15,7 +18,7 @@ begin
   select ltrim("generated_text") into watsonx_response
   from json_table(QSYS2.HTTP_POST(
     'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-07-07',
-    json_object('model_id': 'meta-llama/llama-2-13b-chat', 'input': text, 'parameters': json_object('max_new_tokens': 100, 'time_limit': 1000), 'space_id': watsonx.spaceid), --TODO: add parameter for foundation model
+    json_object('model_id': model_id, 'input': text, 'parameters': json_object('max_new_tokens': 100, 'time_limit': 1000), 'space_id': watsonx.spaceid), --TODO: add parameter for foundation model
     json_object('headers': json_object('Authorization': 'Bearer ' concat watsonx.JobBearerToken, 'Content-Type': 'application/json', 'Accept': 'application/json')) 
   ), 'lax $.results[*]'
   columns(

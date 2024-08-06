@@ -16,6 +16,7 @@ values watsonx.authenticate();
 values watsonx.ShouldGetNewToken();
 
 values watsonx.generate('Hello world');
+values watsonx.generate('Hello world', model_id => 'meta-llama/llama-2-13b-chat');
 
 ------
 -- Ensure authenticate can return N (failed)
