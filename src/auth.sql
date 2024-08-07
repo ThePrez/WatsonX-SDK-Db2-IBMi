@@ -7,8 +7,8 @@ create or replace function watsonx.authenticate()
 begin
   declare expiration_seconds integer;
   declare needsNewToken char(1) default 'Y';
-  declare successful char(1) default 'N';
-  declare bearer_token       varchar(1400) ccsid 1208;
+  declare successful char(1) ccsid 1208 default 'N';
+  declare bearer_token varchar(1400) ccsid 1208;
 
   set needsNewToken = watsonx.ShouldGetNewToken();
 
