@@ -36,3 +36,10 @@ values watsonx.ShouldGetNewToken();
 
 -- Should return '*PLSAUTH'
 values watsonx.generate('Hello world');
+
+------
+-- Validate URL
+------
+
+-- Should return 'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-07-07'
+values watsonx.geturl('/text/generation');

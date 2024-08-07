@@ -19,7 +19,7 @@ begin
   -- TODO: store the result into a response variable, then parse after
   select ltrim("generated_text") into watsonx_response
   from json_table(QSYS2.HTTP_POST(
-    'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-07-07',
+    watsonx.geturl('/text/generation'),
     json_object('model_id': model_id, 'input': text, 'parameters': json_object('max_new_tokens': 100, 'time_limit': 1000), 'space_id': watsonx.spaceid), --TODO: add parameter for foundation model
     json_object('headers': json_object('Authorization': 'Bearer ' concat watsonx.JobBearerToken, 'Content-Type': 'application/json', 'Accept': 'application/json')) 
   ), 'lax $.results[*]'
