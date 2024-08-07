@@ -2,6 +2,8 @@ create or replace function watsonx.authenticate()
   returns char(1) ccsid 1208
   modifies sql data
   not deterministic
+  no external action
+  set option usrprf = *user, dynusrprf = *user, commit = *none
 begin
   declare expiration_seconds integer;
   declare needsNewToken char(1) default 'Y';
@@ -10,7 +12,6 @@ begin
 
   set needsNewToken = watsonx.ShouldGetNewToken();
 
-  renew:
   if (needsNewToken = 'Y') then 
     --
     -- Acquire the Watsonx "Bearer" token, that allows us to ask Watsonx questions for a period of time

@@ -4,6 +4,8 @@ create or replace function watsonx.generate(
 )
   returns varchar(10000) ccsid 1208
   not deterministic
+  no external action
+  set option usrprf = *user, dynusrprf = *user, commit = *none
 begin
   declare watsonx_response Varchar(10000) CCSID 1208;
   declare needsNewToken char(1) default 'Y';
