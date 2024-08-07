@@ -1,6 +1,8 @@
 
 create or replace procedure watsonx.GetModels()
   DYNAMIC RESULT SETS 1
+  program type sub
+  set option usrprf = *user, dynusrprf = *user, commit = *none
 begin
   declare apiResult clob(50000) ccsid 1208;
 
