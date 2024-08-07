@@ -10,12 +10,14 @@ create or replace variable watsonx.JobTokenExpires timestamp;
 --
 
 create or replace procedure watsonx.SetApiKeyForJob(apikey varchar(100))
+  program type sub
   set option usrprf = *user, dynusrprf = *user, commit = *none
 begin
   set watsonx.apikey = apikey;
 end;
 
 create or replace procedure watsonx.SetSpaceIdForJob(spaceid varchar(100))
+  program type sub
   set option usrprf = *user, dynusrprf = *user, commit = *none
 begin
   set watsonx.spaceid = spaceid;
@@ -23,6 +25,7 @@ end;
 
 create or replace procedure watsonx.SetBearerTokenForJob(bearer_token varchar(10000), expires integer)
   modifies sql data
+  program type sub
   set option usrprf = *user, dynusrprf = *user, commit = *none
 begin
   set watsonx.JobBearerToken = bearer_token;
@@ -47,6 +50,7 @@ end;
 
 create or replace procedure watsonx.logoutJob()
   set option usrprf = *user, dynusrprf = *user, commit = *none
+  program type sub
   modifies sql data
 begin
   set watsonx.JobBearerToken = null;
