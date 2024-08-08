@@ -43,3 +43,9 @@ values watsonx.generate('Hello world');
 
 -- Should return 'https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-07-07'
 values watsonx.geturl('/text/generation');
+
+------
+-- Gets a list of models
+------
+
+call watsonx.getmodels();

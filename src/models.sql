@@ -8,7 +8,7 @@ begin
 
   DECLARE ResultSet CURSOR FOR
     select * from JSON_TABLE(QSYS2.HTTP_GET(
-      'https://us-south.ml.cloud.ibm.com/ml/v1/foundation_model_specs?version=2023-07-07'
+      watsonx.geturl('/foundation_model_specs')
     ), '$.resources[*]'
         COLUMNS(
           model_id VARCHAR(128) PATH '$.model_id',
