@@ -1,6 +1,8 @@
-create or replace function watsonx.generate(
+-- https://cloud.ibm.com/apidocs/watsonx-ai#deployments-text-generation
+-- TODO: needs test case
+create or replace function watsonx.InferText(
+  id_or_name varchar(1000) ccsid 1208,
   text varchar(1000) ccsid 1208,
-  model_id varchar(128) ccsid 1208 default 'meta-llama/llama-2-13b-chat',
   parameters varchar(1000) ccsid 1208 default null
 )
   returns varchar(10000) ccsid 1208
@@ -16,17 +18,16 @@ begin
     return '*PLSAUTH';
   end if;
 
-  -- TODO: consider using verbose to we can capture errors
-  -- TODO: store the result into a response variable, then parse after
-
   if parameters is null then
     set parameters = watsonx.parameters(max_new_tokens => 100, time_limit => 1000);
   end if;
-  
+
+  -- TODO: consider using verbose to we can capture errors
+  -- TODO: store the result into a response variable, then parse after
   select ltrim("generated_text") into watsonx_response
   from json_table(QSYS2.HTTP_POST(
-    watsonx.geturl('/text/generation'),
-    json_object('model_id': model_id, 'input': text, 'parameters': parameters format json, 'space_id': watsonx.spaceid),
+    watsonx.geturl('/' concat id_or_name concat '/text/generation'),
+    json_object('input': text, 'parameters': parameters format json, 'space_id': watsonx.spaceid),
     json_object('headers': json_object('Authorization': 'Bearer ' concat watsonx.JobBearerToken, 'Content-Type': 'application/json', 'Accept': 'application/json')) 
   ), 'lax $.results[*]'
   columns(
@@ -39,3 +40,4 @@ begin
   
   return watsonx_response;
 end;
+
