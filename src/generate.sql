@@ -1,6 +1,7 @@
 create or replace function watsonx.generate(
   text varchar(1000) ccsid 1208,
-  model_id varchar(128) ccsid 1208 default 'meta-llama/llama-2-13b-chat'
+  model_id varchar(128) ccsid 1208 default 'meta-llama/llama-2-13b-chat',
+  parameters varchar(1000) ccsid 1208 default null
 )
   returns varchar(10000) ccsid 1208
   not deterministic
@@ -17,10 +18,15 @@ begin
 
   -- TODO: consider using verbose to we can capture errors
   -- TODO: store the result into a response variable, then parse after
+
+  if parameters is null then
+    set parameters = watsonx.parameters(max_new_tokens => 100, time_limit => 1000);
+  end if;
+  
   select ltrim("generated_text") into watsonx_response
   from json_table(QSYS2.HTTP_POST(
     watsonx.geturl('/text/generation'),
-    json_object('model_id': model_id, 'input': text, 'parameters': json_object('max_new_tokens': 100, 'time_limit': 1000), 'space_id': watsonx.spaceid), --TODO: add parameter for foundation model
+    json_object('model_id': model_id, 'input': text, 'parameters': parameters, 'space_id': watsonx.spaceid), --TODO: add parameter for foundation model
     json_object('headers': json_object('Authorization': 'Bearer ' concat watsonx.JobBearerToken, 'Content-Type': 'application/json', 'Accept': 'application/json')) 
   ), 'lax $.results[*]'
   columns(

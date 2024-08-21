@@ -68,3 +68,34 @@ begin
   set watsonx.JobBearerToken = null;
   set watsonx.JobTokenExpires = null;
 end;
+
+create or replace function watsonx.parameters(
+  decoding_method varchar(20) default null,
+  temperature numeric(1, 1) default null,
+  time_limit integer default null,
+  top_p numeric(1, 1) default null,
+  top_k integer default null,
+  random_seed integer default null,
+  repetition_penalty numeric(1, 1) default null,
+  truncate_input_tokens integer default null,
+  min_new_tokens integer default null,
+  max_new_tokens integer default null,
+  typical_p numeric(1, 1) default null
+) 
+  returns varchar(1000) ccsid 1208
+begin
+  return json_object(
+    'decoding_method': decoding_method,
+    'temperature': temperature format json,
+    'time_limit': time_limit format json,
+    'top_p': top_p format json, 
+    'top_k': top_k format json, 
+    'random_seed': random_seed format json, 
+    'repetition_penalty': repetition_penalty format json, 
+    'truncate_input_tokens': truncate_input_tokens format json,
+    'min_new_tokens': min_new_tokens format json, 
+    'max_new_tokens': max_new_tokens format json, 
+    'typical_p': typical_p format json
+    ABSENT ON NULL
+  );
+end;

@@ -49,3 +49,11 @@ values watsonx.geturl('/text/generation');
 ------
 
 call watsonx.getmodels();
+
+------
+-- Test parameters function
+------
+
+values watsonx.parameters(temperature => 0.5, time_limit => 1000);
+
+-- Should return {"temperature":0.5,"time_limit":1000}
