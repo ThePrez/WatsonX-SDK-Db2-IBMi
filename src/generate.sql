@@ -26,7 +26,7 @@ begin
   select ltrim("generated_text") into watsonx_response
   from json_table(QSYS2.HTTP_POST(
     watsonx.geturl('/text/generation'),
-    json_object('model_id': model_id, 'input': text, 'parameters': parameters, 'space_id': watsonx.spaceid),
+    json_object('model_id': model_id, 'input': text, 'parameters': parameters format json, 'space_id': watsonx.spaceid),
     json_object('headers': json_object('Authorization': 'Bearer ' concat watsonx.JobBearerToken, 'Content-Type': 'application/json', 'Accept': 'application/json')) 
   ), 'lax $.results[*]'
   columns(
